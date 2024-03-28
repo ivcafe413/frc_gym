@@ -12,7 +12,7 @@ import os
 serverIP = '127.0.0.1'
 serverPort = '8888'
 
-exeCmd = "Environment/frc_run.x86_64"
+exeCmd = "Environment/frc_run.x86_64 --audio-driver PulseAudio"
 
 actionSpace = spaces.Box(low=np.array([-1.0, -1.0, -1.0], dtype=np.float32), # Linear X-Axis, Linear Y-Axis, Rotational X-Axis
                          high=np.array([1.0, 1.0, 1.0], dtype=np.float32),
