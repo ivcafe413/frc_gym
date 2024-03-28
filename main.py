@@ -19,7 +19,7 @@ serverPort = '8888'
 # scenePath = "--upwards environment.tscn"
 # projectPath = "project.godot"
 # exeCmd = "{} {}".format(godotPath, scenePath)
-exeCmd = "cd Environment && frc_run.x86_64"
+exeCmd = "Environment/frc_run.x86_64"
 
 actionSpace = spaces.Box(low=np.array([-1.0, -1.0, -1.0], dtype=np.float32), # Linear X-Axis, Linear Y-Axis, Rotational X-Axis
                          high=np.array([1.0, 1.0, 1.0], dtype=np.float32),
