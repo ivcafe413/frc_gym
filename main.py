@@ -1,5 +1,7 @@
-import gymnasium as gym
-from gymnasium import spaces
+# import gymnasium as gym
+import gym
+# from gymnasium import spaces
+from gym import spaces
 
 import numpy as np
 
