@@ -1,3 +1,6 @@
 res://environment.tscn
 res://robot.gd
 res://Environment.gd
+res://robot.tscn
+res://GymGodot.tscn
+res://field.gd
