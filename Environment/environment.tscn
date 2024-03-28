@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3 uid="uid://1x2vm1gascdo"]
+
+[ext_resource type="PackedScene" uid="uid://bselalirjblno" path="res://GymGodot.tscn" id="1_apqca"]
+[ext_resource type="Script" path="res://Environment.gd" id="2_33qhy"]
+[ext_resource type="PackedScene" uid="uid://cw1xytrfnwoh8" path="res://robot.tscn" id="3_3wwen"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7spo1"]
+size = Vector2(512, 512)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jek30"]
+friction = 0.75
+bounce = 1.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_1jiw8"]
+
+[node name="Field" type="Area2D"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="GodotGym" parent="." instance=ExtResource("1_apqca")]
+enabled = false
+stepLength = 5
+environmentNode = NodePath("../Environment")
+
+[node name="Environment" type="Node" parent="."]
+script = ExtResource("2_33qhy")
+
+[node name="FieldShape" type="CollisionShape2D" parent="."]
+position = Vector2(256, 256)
+shape = SubResource("RectangleShape2D_7spo1")
+
+[node name="Robot" parent="." instance=ExtResource("3_3wwen")]
+position = Vector2(256, 256)
+
+[node name="RightSideBody" type="StaticBody2D" parent="."]
+position = Vector2(512, 256)
+rotation = -1.5708
+physics_material_override = SubResource("PhysicsMaterial_jek30")
+
+[node name="RightSide" type="CollisionShape2D" parent="RightSideBody"]
+shape = SubResource("WorldBoundaryShape2D_1jiw8")
+
+[node name="TopSideBody" type="StaticBody2D" parent="."]
+position = Vector2(256, 0)
+rotation = 3.14159
+physics_material_override = SubResource("PhysicsMaterial_jek30")
+
+[node name="TopSide" type="CollisionShape2D" parent="TopSideBody"]
+shape = SubResource("WorldBoundaryShape2D_1jiw8")
+
+[node name="BottomSideBody" type="StaticBody2D" parent="."]
+position = Vector2(256, 512)
+physics_material_override = SubResource("PhysicsMaterial_jek30")
+
+[node name="BottomSide" type="CollisionShape2D" parent="BottomSideBody"]
+shape = SubResource("WorldBoundaryShape2D_1jiw8")
+
+[node name="LeftSideBody" type="StaticBody2D" parent="."]
+position = Vector2(0, 256)
+rotation = 1.5708
+physics_material_override = SubResource("PhysicsMaterial_jek30")
+
+[node name="LeftSide" type="CollisionShape2D" parent="LeftSideBody"]
+shape = SubResource("WorldBoundaryShape2D_1jiw8")

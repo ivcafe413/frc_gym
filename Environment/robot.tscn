@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cw1xytrfnwoh8"]
+
+[ext_resource type="Script" path="res://robot.gd" id="1_8mpwn"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_h8e0n"]
+friction = 0.8
+rough = true
+bounce = 0.5
+absorbent = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pwga1"]
+size = Vector2(100, 100)
+
+[node name="Robot" type="RigidBody2D"]
+position = Vector2(255, 255)
+mass = 40.0
+physics_material_override = SubResource("PhysicsMaterial_h8e0n")
+linear_damp = 6.0
+angular_damp = 5.0
+script = ExtResource("1_8mpwn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_pwga1")
