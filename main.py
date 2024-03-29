@@ -12,9 +12,14 @@ import os
 serverIP = '127.0.0.1'
 serverPort = '8888'
 
-exeCmd = "Environment/frc_run.x86_64 --audio-driver PulseAudio"
+projectPath = os.path.join(os.getcwd(), "Environment")
+godotPath = "flatpak run org.godotengine.Godot"
+scenePath = "./environment.tscn"
+# exeCmd = "Environment/frc_run.sh -d --audio-driver PulseAudio"
+exeCmd = "cd {} && {} {} --display-driver 'x11' --rendering-driver 'vulkan' --rendering-method 'forward_plus' --verbose".format(projectPath, godotPath, scenePath)
 
-actionSpace = spaces.Box(low=np.array([-1.0, -1.0, -1.0], dtype=np.float32), # Linear X-Axis, Linear Y-Axis, Rotational X-Axis
+# Linear X-Axis, Linear Y-Axis, Rotational X-Axis
+actionSpace = spaces.Box(low=np.array([-1.0, -1.0, -1.0], dtype=np.float32), 
                          high=np.array([1.0, 1.0, 1.0], dtype=np.float32),
                          dtype=np.float32)
 
@@ -48,8 +53,12 @@ env = gym.make('server-v0', serverIP=serverIP, serverPort=serverPort, exeCmd=exe
                action_space=actionSpace, observation_space=observationSpace,
                window_render=True, renderPath=renderPath)
 
-state = env.reset()
-for _ in range(1000):
+print("Resetting environment...")
+_ = env.reset()
+env.render()
+
+for i in range(1000):
+    print("Step ", i)
     env.render()
     new_action = env.action_space.sample()
     print(env.step(new_action))
