@@ -1,13 +1,14 @@
-import gymnasium as gym
-#import gym
-from gymnasium import spaces
-#from gym import spaces
-
+import os
 import numpy as np
 
-import gym_server
+import gymnasium as gym
+from gymnasium import spaces
+from gymnasium.wrappers import TimeLimit
 
-import os
+from stable_baselines3 import DDPG
+from stable_baselines3.common.monitor import Monitor
+
+import gym_server
 
 serverIP = 'localhost'
 serverPort = '8000'
@@ -17,7 +18,7 @@ godotPath = "flatpak run org.godotengine.Godot"
 scenePath = "./environment.tscn"
 # exeCmd = "Environment/frc_run.sh --display-driver 'x11' --rendering-driver 'vulkan' --rendering-method 'forward_plus' --gpu-abort --verbose"
 exeCmd = ("cd {} && {} {} "
-            "--display-driver 'x11' "
+            "--display-driver 'headless' "
             "--rendering-driver 'vulkan' "
             "--rendering-method 'forward_plus' "
             "--verbose --debug-collisions").format(projectPath, godotPath, scenePath)
@@ -50,8 +51,6 @@ high=np.array([
 dtype=np.float32)
 
 renderPath = "renderFrames/"
-# if not os.path.exists(renderPath):
-#     os.makedirs(renderPath)
 
 print("Getting ready to make...")
 
@@ -59,19 +58,4 @@ env = gym.make('server-v0', serverIP=serverIP, serverPort=serverPort, exeCmd=exe
                action_space=actionSpace, observation_space=observationSpace,
                window_render=True, renderPath=renderPath)
 
-print("     Attempting to Resetting environment...")
-print(env.reset())
-print("     Environment Reset!!!")
-
-env.render()
-
-for i in range(10):
-    print("Step ", i)
-    # env.render()
-    new_action = env.action_space.sample()
-    print(env.step(new_action))
-
-env.render()
-
-env.close()
-del env
+env = Monitor(TimeLimit(env, max_episode_steps=250))
