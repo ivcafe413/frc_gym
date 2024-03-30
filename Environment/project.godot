@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Crescendo_OpenGym_2"
+config/name="FRC_GYM"
 run/main_scene="res://environment.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"

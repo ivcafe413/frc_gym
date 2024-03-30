@@ -26,25 +26,24 @@ func _integrate_forces(state):
 		state.angular_velocity *= 0
 		state.transform = initial_transform
 	else:
-		if Input.is_action_pressed("swerve_left"):
-			rotation_direction = -1.0
-		if Input.is_action_pressed("swerve_right"):
-			rotation_direction = 1.0
+		#if Input.is_action_pressed("swerve_left"):
+			#rotation_direction = -1.0
+		#if Input.is_action_pressed("swerve_right"):
+			#rotation_direction = 1.0
 			
 		apply_torque(rotation_direction * torque)
 		
-		if Input.is_action_pressed("drive_up"):
-			drive_direction.y = -1
-		if Input.is_action_pressed("drive_down"):
-			drive_direction.y = 1
-		if Input.is_action_pressed("drive_left"):
-			drive_direction.x = -1
-		if Input.is_action_pressed("drive_right"):
-			drive_direction.x = 1
+		#if Input.is_action_pressed("drive_up"):
+			#drive_direction.y = -1
+		#if Input.is_action_pressed("drive_down"):
+			#drive_direction.y = 1
+		#if Input.is_action_pressed("drive_left"):
+			#drive_direction.x = -1
+		#if Input.is_action_pressed("drive_right"):
+			#drive_direction.x = 1
 			
 		if drive_direction.length() > 0:
 			drive_direction = drive_direction.normalized()
-			#apply_central_force(drive_direction * drive_torque)
 			apply_central_impulse(drive_direction * drive_torque)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -47,10 +47,6 @@ func _ready() -> void :
 		$WebSocketClient.free()
 		return
 
-	if not enabled :
-		$WebSocketClient.free()
-		return
-
 	print("GYMGODOT is trying to get Ready...")
 	
 	# This node will never be paused
@@ -74,6 +70,7 @@ func _ready() -> void :
 	
 func _physics_process(_delta : float) -> void :
 	if not enabled :
+		environment.human_input()
 		return
 	# Simulate stepLength frames with the current action. 
 	# Then pause the game and return the observation/reward/isDone to the server
