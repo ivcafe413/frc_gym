@@ -47,10 +47,13 @@ func _ready() -> void :
 		$WebSocketClient.free()
 		return
 
-	print("GYMGODOT is trying to get Ready...")
+	if not enabled :
+		$WebSocketClient.free()
+		return
 
+	print("GYMGODOT is trying to get Ready...")
+	
 	# This node will never be paused
-	print("GODOT ----- This node will never be paused")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	# Initialy, the environment is paused
 	get_tree().paused = true

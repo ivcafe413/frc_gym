@@ -11,8 +11,9 @@ var initial_transform = self.transform
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var environment = get_parent().find_child("Environment")
-	environment.connect("env_reset", Callable(self, "_on_env_reset"))
+	var environment = get_parent()
+	if not environment is Window:
+		environment.env_reset.connect(_on_env_reset)
 	
 func _on_env_reset():
 	self_reset = true
