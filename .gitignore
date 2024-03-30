@@ -1,3 +1,5 @@
+Environment/renderFrames/
+
 # Godot 4+ specific ignores
 .godot/
 

@@ -16,7 +16,11 @@ projectPath = os.path.join(os.getcwd(), "Environment")
 godotPath = "flatpak run org.godotengine.Godot"
 scenePath = "./environment.tscn"
 # exeCmd = "Environment/frc_run.sh --display-driver 'x11' --rendering-driver 'vulkan' --rendering-method 'forward_plus' --gpu-abort --verbose"
-exeCmd = "cd {} && {} {} --display-driver 'x11' --rendering-driver 'vulkan' --rendering-method 'forward_plus' --verbose".format(projectPath, godotPath, scenePath)
+exeCmd = ("cd {} && {} {} "
+            "--display-driver 'x11' "
+            "--rendering-driver 'vulkan' "
+            "--rendering-method 'forward_plus' "
+            "--verbose --debug-collisions").format(projectPath, godotPath, scenePath)
 
 # Linear X-Axis, Linear Y-Axis, Rotational X-Axis
 actionSpace = spaces.Box(low=np.array([-1.0, -1.0, -1.0], dtype=np.float32), 
@@ -45,9 +49,9 @@ high=np.array([
 ], dtype=np.float32),
 dtype=np.float32)
 
-renderPath = "renderFrames"
-if not os.path.exists(renderPath):
-    os.makedirs(renderPath)
+renderPath = "renderFrames/"
+# if not os.path.exists(renderPath):
+#     os.makedirs(renderPath)
 
 print("Getting ready to make...")
 

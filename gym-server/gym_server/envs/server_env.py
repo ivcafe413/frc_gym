@@ -88,12 +88,12 @@ class ServerEnv(gym.Env):
         print("_server_handler")
         while True:
             # Block until there is a msg to send and read it
-            print("blocking...")
+            print("GYM-SERVER : blocking...")
             msg = self.child_conn.recv() 
-            print("msg: ", msg)
+            print("GYM-SERVER : script cmd: ", msg)
             # Wait for the msg to be sent
             await websocket.send(json.dumps(msg))
-            print("sent the message!")
+            
             # If msg is not a 'close' msg then wait for the answer, otherwise stop the server
             if msg['cmd'] != 'close' :
                 try:

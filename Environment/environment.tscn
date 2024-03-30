@@ -20,7 +20,7 @@ collision_mask = 0
 script = ExtResource("1_dy7tg")
 
 [node name="GodotGym" parent="." instance=ExtResource("1_apqca")]
-enabled = false
+enabled = true
 stepLength = 5
 environmentNode = NodePath("../Environment")
 

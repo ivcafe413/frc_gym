@@ -43,10 +43,11 @@ func _ready() -> void :
 	environment = get_node(environmentNode)
 	frameCounter = 0
 
+	if not enabled :
+		$WebSocketClient.free()
+		return
+
 	print("GYMGODOT is trying to get Ready...")
-	# if not enabled :
-	# 	$WebSocketClient.free()
-	# 	return
 
 	# This node will never be paused
 	print("GODOT ----- This node will never be paused")
