@@ -15,7 +15,7 @@ extends Node
 # Default url of the server (if not provided through cmdline arguments)
 var serverIP : String = '127.0.0.1'
 # Default port of the server (if not provided through cmdline arguments)
-var serverPort : int = 8888
+var serverPort : int = 8000
 
 # Default path to store render frames (if not provided through cmdline arguments)
 var renderPath : String = './render_frames/'
@@ -23,7 +23,7 @@ var renderPath : String = './render_frames/'
 var renderFrameCounter : int = 0
 
 # Print debug logs
-@export var debugPrint: bool = false
+@export var debugPrint: bool = true
 
 var currentAction : Array
 var environment : Node
@@ -42,14 +42,18 @@ func _ready() -> void :
 	currentAction = []
 	environment = get_node(environmentNode)
 	frameCounter = 0
-	
-	if not enabled :
-		$WebSocketClient.free()
-		return
+
+	print("GYMGODOT is trying to get Ready...")
+	# if not enabled :
+	# 	$WebSocketClient.free()
+	# 	return
+
 	# This node will never be paused
+	print("GODOT ----- This node will never be paused")
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	# Initialy, the environment is paused
 	get_tree().paused = true
+
 	# Get the server IP/Port from argument
 	var arguments = _parse_arguments()
 	if 'serverIP' in arguments :
@@ -59,7 +63,9 @@ func _ready() -> void :
 	# Get frame render parameters
 	if 'renderPath' in arguments :
 		renderPath = arguments['renderPath']
+
 	# Connect to the ws server using those IP/port
+	print("GYMGODOT is trying to connect to websocket server...")
 	$WebSocketClient.connect_to_server(serverIP, serverPort)
 	
 func _physics_process(_delta : float) -> void :
@@ -97,6 +103,7 @@ func _returnData() -> void :
 	
 # Called by WebSocketClient when it recieve a reset msg
 func reset() -> void :
+	print("GYMGODOT : Resetting...")
 	environment.reset()
 	var obs : Array = environment.get_observation()
 	var answer : Dictionary = {'init_observation': obs}
@@ -107,8 +114,8 @@ func reset() -> void :
 # Renders to .png in the renderPath folder
 func render() -> void :
 	RenderingServer.force_draw()
-	var screenshot = get_viewport().get_texture().get_data()
-	screenshot.flip_y()
+	var screenshot = get_viewport().get_texture().get_image()
+	#screenshot.flip_y()
 	var error = screenshot.save_png(renderPath + str(renderFrameCounter) + '.png')
 	renderFrameCounter += 1
 	var answer : Dictionary = {'render_error': str(error)}

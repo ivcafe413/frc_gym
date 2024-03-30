@@ -16,6 +16,7 @@ func get_reward() -> float:
 	return 0.0
 	
 func reset() -> void:
+	print(" ----- ----- ----- RESETTING GODOT ENVIRONMENT ----- ----- -----")
 	env_reset.emit() 
 	
 func is_done() -> bool:

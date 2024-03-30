@@ -1,5 +1,5 @@
-import gym
-from gym import spaces
+import gymnasium as gym
+from gymnasium import spaces
 import numpy as np
 import asyncio
 import websockets
@@ -35,6 +35,7 @@ class ServerEnv(gym.Env):
             self.p = Thread(target=self._start_server)
         elif proc_mode == 'process':
             self.p = Process(target=self._start_server)
+            # asyncio.create_subprocess_exec(self.main())
         self.p.start()
 
         # Start the simulation
@@ -45,22 +46,54 @@ class ServerEnv(gym.Env):
         render_path_flag = ' --renderPath={}'.format(renderPath)
         flags = physic_delta_flag + render_loop_flag + server_ip_flag + server_port_flag + render_path_flag
         print('- starting Godot env with command : ' + exeCmd + flags)
-        subprocess.Popen([exeCmd + flags], shell=True)
+        process = subprocess.Popen([exeCmd + flags], shell=True)
+
+    async def main(self):
+        async with websockets.serve(self._server_handler, "", self.serverPort):
+            await asyncio.Future()
+
+    # async def betterHandler(self, websocket):
+    #     print("GYM-SERVER : Websocket Server Handling...")
+    #     while True:
+    #         # Block until there is a msg to send and read it
+    #         msg = self.child_conn.recv() 
+    #         # If msg is not a 'close' msg then wait for the answer, otherwise stop the server
+    #         if msg['cmd'] != 'close' :
+    #             try:
+    #                 answer = await websocket.recv()  
+    #             except:
+    #                 print('- connection ended')
+    #                 break
+    #             # Parse answer
+    #             answer = json.loads(answer)
+    #             # Send the answer back to main process
+    #             self.child_conn.send(answer)
+    #         else :
+    #             break
 
     def _start_server(self):
-        # Run server logic on process loop
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
-        ws_server = websockets.serve(self._server_handler, self.serverIP, self.serverPort)
-        self.loop.run_until_complete(ws_server)
-        self.loop.run_forever()
+        print("GYM-SERVER : Starting the Python Websocket Server!")
+        asyncio.run(self.main())
+
+        # # Run server logic on process loop
+        # self.loop = asyncio.new_event_loop()
+        # asyncio.set_event_loop(self.loop)
+        # # print("GYM-SERVER : Starting the Python Websocket Server!")
+        # ws_server = websockets.serve(self._server_handler, self.serverIP, self.serverPort)
+        # # print("GYM-SERVER : Websocket Server Serving!")
+        # self.loop.run_until_complete(ws_server)
+        # self.loop.run_forever()
     
-    async def _server_handler(self, websocket, path):
+    async def _server_handler(self, websocket):
+        print("_server_handler")
         while True:
             # Block until there is a msg to send and read it
+            print("blocking...")
             msg = self.child_conn.recv() 
+            print("msg: ", msg)
             # Wait for the msg to be sent
             await websocket.send(json.dumps(msg))
+            print("sent the message!")
             # If msg is not a 'close' msg then wait for the answer, otherwise stop the server
             if msg['cmd'] != 'close' :
                 try:
@@ -74,7 +107,8 @@ class ServerEnv(gym.Env):
                 self.child_conn.send(answer)
             else :
                 break
-        self.loop.call_soon_threadsafe(self.loop.stop)
+
+        # self.loop.call_soon_threadsafe(self.loop.stop)
 
     def _sendAndGetAnswer(self, msg):
         # Send msg to server process
@@ -84,6 +118,7 @@ class ServerEnv(gym.Env):
 
     def reset(self):    
         # Send reset msg and return initial observation
+        print("Sending the RESET message...")
         answer = self._sendAndGetAnswer({'cmd': 'reset'})
         return np.array(answer['init_observation']).astype(np.float32)
 

@@ -1,7 +1,7 @@
-# import gymnasium as gym
-import gym
-# from gymnasium import spaces
-from gym import spaces
+import gymnasium as gym
+#import gym
+from gymnasium import spaces
+#from gym import spaces
 
 import numpy as np
 
@@ -9,13 +9,13 @@ import gym_server
 
 import os
 
-serverIP = '127.0.0.1'
-serverPort = '8888'
+serverIP = 'localhost'
+serverPort = '8000'
 
 projectPath = os.path.join(os.getcwd(), "Environment")
 godotPath = "flatpak run org.godotengine.Godot"
 scenePath = "./environment.tscn"
-# exeCmd = "Environment/frc_run.sh -d --audio-driver PulseAudio"
+# exeCmd = "Environment/frc_run.sh --display-driver 'x11' --rendering-driver 'vulkan' --rendering-method 'forward_plus' --gpu-abort --verbose"
 exeCmd = "cd {} && {} {} --display-driver 'x11' --rendering-driver 'vulkan' --rendering-method 'forward_plus' --verbose".format(projectPath, godotPath, scenePath)
 
 # Linear X-Axis, Linear Y-Axis, Rotational X-Axis
@@ -49,20 +49,25 @@ renderPath = "renderFrames"
 if not os.path.exists(renderPath):
     os.makedirs(renderPath)
 
+print("Getting ready to make...")
+
 env = gym.make('server-v0', serverIP=serverIP, serverPort=serverPort, exeCmd=exeCmd,
                action_space=actionSpace, observation_space=observationSpace,
                window_render=True, renderPath=renderPath)
 
-print("Resetting environment...")
-_ = env.reset()
+print("     Attempting to Resetting environment...")
+print(env.reset())
+print("     Environment Reset!!!")
+
 env.render()
 
-for i in range(1000):
+for i in range(10):
     print("Step ", i)
-    env.render()
+    # env.render()
     new_action = env.action_space.sample()
     print(env.step(new_action))
 
 env.render()
 
 env.close()
+del env
